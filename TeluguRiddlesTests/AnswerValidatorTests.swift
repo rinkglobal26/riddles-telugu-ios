@@ -10,6 +10,32 @@ final class AnswerValidatorTests: XCTestCase {
         XCTAssertTrue(AnswerValidator.isCorrect("the coconut", for: sampleRiddle, mode: .english))
     }
 
+    func testAcceptsPartialAnswer() {
+        XCTAssertTrue(AnswerValidator.isCorrect("కొబ్బరి", for: sampleRiddle, mode: .telugu))
+    }
+
+    func testAcceptsCloseTypo() {
+        XCTAssertTrue(AnswerValidator.isCorrect("cocnut", for: sampleRiddle, mode: .english))
+    }
+
+    func testAcceptsEquivalentMeaning() {
+        let riddle = Riddle(
+            id: 2,
+            category: "ప్రకృతి",
+            englishCategory: "Nature",
+            difficulty: "సులువు",
+            englishDifficulty: "Easy",
+            question: "ప్రశ్న",
+            englishQuestion: "Question",
+            answer: "చంద్రుడు",
+            englishAnswer: "Moon",
+            hint: "సూచన",
+            englishHint: "Hint"
+        )
+
+        XCTAssertTrue(AnswerValidator.isCorrect("చందమామ", for: riddle, mode: .telugu))
+    }
+
     func testRejectsWrongAnswer() {
         XCTAssertFalse(AnswerValidator.isCorrect("మామిడి", for: sampleRiddle, mode: .hybrid))
     }

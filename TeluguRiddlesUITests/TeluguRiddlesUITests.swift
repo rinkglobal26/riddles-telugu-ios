@@ -9,8 +9,8 @@ final class TeluguRiddlesUITests: XCTestCase {
         let app = XCUIApplication()
         app.launch()
 
-        XCTAssertTrue(app.staticTexts["తెలుగు పొడుపు కథలు"].waitForExistence(timeout: 5))
-        XCTAssertTrue(app.buttons["ఆట ప్రారంభించు"].exists)
+        XCTAssertTrue(app.staticTexts["Telugu Riddles"].waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons["Start Game"].exists)
     }
 
     func testEnglishModeChangesCommonControlsToEnglish() {

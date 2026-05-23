@@ -5,14 +5,14 @@ struct ContentView: View {
     @EnvironmentObject private var progressStore: RiddleProgressStore
     @StateObject private var dailyNotifier = DailyRiddleNotifier()
     @AppStorage("dailyRiddleNotificationsEnabled") private var dailyRiddleNotificationsEnabled = false
-    @State private var languageMode: LanguageMode = .telugu
+    @State private var languageMode: LanguageMode = .hybrid
     @State private var playMode: PlayMode = .solo
     @State private var selectedCategory = "అన్ని"
     @State private var gameLength: GameLength = .twenty
     @State private var skipSeenRiddles = true
     @State private var teams: [GameTeam] = [
-        GameTeam(name: "జట్టు 1"),
-        GameTeam(name: "జట్టు 2")
+        GameTeam(name: ""),
+        GameTeam(name: "")
     ]
     @State private var isPlaying = false
 
@@ -23,7 +23,7 @@ struct ContentView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                AppTheme.background.ignoresSafeArea()
+                AppBackground()
 
                 ScrollView {
                     VStack(alignment: .leading, spacing: 24) {
@@ -34,13 +34,20 @@ struct ContentView: View {
                         progressOptions
                         dailyRiddleOptions
                         answerStats
-                        if playMode == .teams {
-                            teamEditor
-                        }
-                        startButton
                     }
+                    .frame(maxWidth: .infinity, alignment: .topLeading)
                     .padding(20)
+                    .padding(.bottom, 96)
                 }
+                .scrollIndicators(.visible)
+                .scrollDismissesKeyboard(.interactively)
+            }
+            .safeAreaInset(edge: .bottom) {
+                startButton
+                    .padding(.horizontal, 20)
+                    .padding(.top, 12)
+                    .padding(.bottom, 10)
+                    .background(AppTheme.background.opacity(0.96))
             }
             .navigationDestination(isPresented: $isPlaying) {
                 GameView(
@@ -48,7 +55,7 @@ struct ContentView: View {
                     gameLength: gameLength,
                     playMode: playMode,
                     languageMode: languageMode,
-                    teams: playMode == .teams ? teams : []
+                    teams: playMode == .teams ? preparedTeams : []
                 )
             }
             .onAppear {
@@ -64,6 +71,15 @@ struct ContentView: View {
         skipSeenRiddles
             ? store.riddles(in: selectedCategory, excludingSeen: progressStore.seenIDs)
             : store.riddles(in: selectedCategory)
+    }
+
+    private var preparedTeams: [GameTeam] {
+        teams.enumerated().map { index, team in
+            var prepared = team
+            let trimmedName = team.name.trimmingCharacters(in: .whitespacesAndNewlines)
+            prepared.name = trimmedName.isEmpty ? "Team \(index + 1)" : trimmedName
+            return prepared
+        }
     }
 
     private var header: some View {
@@ -112,6 +128,11 @@ struct ContentView: View {
                 }
             }
             .pickerStyle(.segmented)
+
+            if playMode == .teams {
+                teamEditor
+                    .padding(.top, 2)
+            }
 
             Picker(copy.category, selection: $selectedCategory) {
                 ForEach(store.categories, id: \.self) { category in
@@ -204,8 +225,8 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 14) {
             SectionTitle(copy.teams)
 
-            ForEach($teams) { $team in
-                TextField(copy.teamName, text: $team.name)
+            ForEach(teams.indices, id: \.self) { index in
+                TextField(copy.teamNamePlaceholder(index + 1), text: $teams[index].name)
                     .textInputAutocapitalization(.words)
                     .padding(14)
                     .background(AppTheme.surface)
@@ -215,7 +236,7 @@ struct ContentView: View {
             HStack {
                 Button {
                     guard teams.count < 6 else { return }
-                    teams.append(GameTeam(name: copy.defaultTeamName(teams.count + 1)))
+                    teams.append(GameTeam(name: ""))
                 } label: {
                     Label(copy.addTeam, systemImage: "plus")
                 }
@@ -288,6 +309,10 @@ struct GameView: View {
         AppCopy(mode: languageMode)
     }
 
+    private var canRevealAnswer: Bool {
+        showHint || attemptRecordedForCurrentRiddle
+    }
+
     init(riddles: [Riddle], gameLength: GameLength, playMode: PlayMode, languageMode: LanguageMode, teams: [GameTeam]) {
         self.riddles = riddles
         self.gameLength = gameLength
@@ -298,7 +323,7 @@ struct GameView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.background.ignoresSafeArea()
+            AppBackground()
 
             if let riddle = session.currentRiddle {
                 ScrollView {
@@ -416,18 +441,35 @@ struct GameView: View {
                 .multilineTextAlignment(.center)
 
             if showHint {
-                InfoStrip(title: copy.hint, text: riddle.hint(for: languageMode), systemImage: "lightbulb")
+                InfoStrip(title: copy.hint, text: riddle.hint(for: languageMode), systemImage: "lightbulb.fill", tone: AppTheme.warning)
             }
 
             if showAnswer {
-                InfoStrip(title: copy.answer, text: riddle.answer(for: languageMode), systemImage: "checkmark.circle")
+                InfoStrip(title: copy.answer, text: riddle.answer(for: languageMode), systemImage: "checkmark.seal.fill", tone: AppTheme.success)
             }
         }
         .padding(22)
         .frame(maxWidth: .infinity)
-        .background(AppTheme.surface)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            AppTheme.surface,
+                            Color(red: 1.0, green: 0.985, blue: 0.94)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(AppTheme.border, lineWidth: 1)
+        )
         .clipShape(RoundedRectangle(cornerRadius: 8))
-        .shadow(color: .black.opacity(0.08), radius: 18, y: 8)
+        .shadow(color: AppTheme.primary.opacity(0.10), radius: 18, x: 0, y: 10)
+        .shadow(color: .black.opacity(0.04), radius: 3, x: 0, y: 1)
     }
 
     private var actionRow: some View {
@@ -442,12 +484,15 @@ struct GameView: View {
                 .buttonStyle(SecondaryButtonStyle())
 
                 Button {
+                    guard canRevealAnswer else { return }
                     showAnswer.toggle()
                 } label: {
                     Label(showAnswer ? copy.hideAnswer : copy.answer, systemImage: "eye")
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(SecondaryButtonStyle())
+                .disabled(!canRevealAnswer)
+                .accessibilityHint(canRevealAnswer ? "" : copy.answerRevealLocked)
             }
 
             if playMode == .teams {
@@ -491,7 +536,15 @@ struct GameView: View {
                         submitAnswer(for: riddle)
                     }
                     .padding(14)
-                    .background(AppTheme.surface)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(AppTheme.surface)
+                            .shadow(color: .black.opacity(0.06), radius: 10, x: 0, y: 5)
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(answerFeedback?.isCorrect == true ? AppTheme.success : AppTheme.border, lineWidth: 1.2)
+                    )
                     .clipShape(RoundedRectangle(cornerRadius: 8))
 
                 Button {
@@ -510,10 +563,20 @@ struct GameView: View {
                 InfoStrip(
                     title: answerFeedback.isCorrect ? copy.correct : copy.tryAgain,
                     text: answerFeedback.isCorrect ? copy.correctAnswerMessage : copy.wrongAnswerMessage,
-                    systemImage: answerFeedback.isCorrect ? "checkmark.circle" : "xmark.circle"
+                    systemImage: answerFeedback.isCorrect ? "checkmark.circle.fill" : "xmark.circle.fill",
+                    tone: answerFeedback.isCorrect ? AppTheme.success : AppTheme.error
                 )
             }
         }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(.white.opacity(0.54))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(.white.opacity(0.72), lineWidth: 1)
+        )
     }
 
     private func nextRound(scored: Bool) {
@@ -541,7 +604,6 @@ struct GameView: View {
     private func submitAnswer(for riddle: Riddle) {
         let isCorrect = AnswerValidator.isCorrect(answerText, for: riddle, mode: languageMode)
         answerFeedback = isCorrect ? .correct : .wrong
-        showAnswer = true
 
         guard !attemptRecordedForCurrentRiddle else { return }
         progressStore.recordAttempt(isCorrect: isCorrect)
@@ -570,7 +632,7 @@ struct ResultsView: View {
 
     var body: some View {
         ZStack {
-            AppTheme.background.ignoresSafeArea()
+            AppBackground()
 
             VStack(spacing: 18) {
                 Text(playMode == .teams ? copy.results : copy.complete)
@@ -664,49 +726,127 @@ struct InfoStrip: View {
     let title: String
     let text: String
     let systemImage: String
+    var tone: Color = AppTheme.primary
 
     var body: some View {
         HStack(alignment: .top, spacing: 10) {
             Image(systemName: systemImage)
-                .font(.headline)
-                .foregroundStyle(AppTheme.primary)
-            VStack(alignment: .leading, spacing: 3) {
+                .font(.system(size: 17, weight: .bold))
+                .foregroundStyle(.white)
+                .frame(width: 32, height: 32)
+                .background(tone)
+                .clipShape(Circle())
+                .shadow(color: tone.opacity(0.25), radius: 8, x: 0, y: 4)
+
+            VStack(alignment: .leading, spacing: 5) {
                 Text(title)
-                    .font(.caption.weight(.bold))
-                    .foregroundStyle(AppTheme.muted)
+                    .font(.caption.weight(.heavy))
+                    .foregroundStyle(tone)
+                    .textCase(.uppercase)
                 Text(text)
                     .font(.body.weight(.semibold))
                     .foregroundStyle(AppTheme.ink)
+                    .lineSpacing(3)
             }
             Spacer(minLength: 0)
         }
-        .padding(14)
-        .background(AppTheme.background)
+        .padding(15)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            tone.opacity(0.13),
+                            AppTheme.surface.opacity(0.92)
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(tone.opacity(0.26), lineWidth: 1)
+        )
         .clipShape(RoundedRectangle(cornerRadius: 8))
+        .shadow(color: tone.opacity(0.10), radius: 14, x: 0, y: 8)
     }
 }
 
 struct PrimaryButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.headline)
-            .foregroundStyle(.white)
+            .foregroundStyle(isEnabled ? .white : AppTheme.disabledInk)
             .padding(.horizontal, 16)
             .padding(.vertical, 14)
-            .background(AppTheme.primary.opacity(configuration.isPressed ? 0.78 : 1))
+            .background(buttonBackground(isPressed: configuration.isPressed))
             .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+
+    private func buttonBackground(isPressed: Bool) -> Color {
+        if !isEnabled {
+            return AppTheme.disabledSurface
+        }
+
+        return AppTheme.primary.opacity(isPressed ? 0.78 : 1)
     }
 }
 
 struct SecondaryButtonStyle: ButtonStyle {
+    @Environment(\.isEnabled) private var isEnabled
+
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.headline)
-            .foregroundStyle(AppTheme.ink)
+            .foregroundStyle(isEnabled ? AppTheme.ink : AppTheme.disabledInk)
             .padding(.horizontal, 14)
             .padding(.vertical, 13)
-            .background(AppTheme.surface.opacity(configuration.isPressed ? 0.72 : 1))
+            .background(isEnabled ? AppTheme.surface.opacity(configuration.isPressed ? 0.72 : 1) : AppTheme.disabledSurface)
             .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+}
+
+struct AppBackground: View {
+    var body: some View {
+        LinearGradient(
+            colors: [
+                Color(red: 1.00, green: 0.93, blue: 0.72),
+                AppTheme.background,
+                Color(red: 0.90, green: 0.96, blue: 0.90)
+            ],
+            startPoint: .topLeading,
+            endPoint: .bottomTrailing
+        )
+        .ignoresSafeArea()
+        .overlay(alignment: .topTrailing) {
+            Image(systemName: "sparkles")
+                .font(.system(size: 86, weight: .light))
+                .foregroundStyle(AppTheme.primary.opacity(0.09))
+                .padding(.top, 54)
+                .padding(.trailing, 28)
+        }
+        .overlay(alignment: .bottomLeading) {
+            Image(systemName: "questionmark.bubble.fill")
+                .font(.system(size: 72, weight: .light))
+                .foregroundStyle(Color(red: 0.20, green: 0.46, blue: 0.38).opacity(0.09))
+                .padding(.leading, 24)
+                .padding(.bottom, 84)
+        }
+        .overlay {
+            VStack(spacing: 46) {
+                ForEach(0..<8, id: \.self) { _ in
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(AppTheme.primary.opacity(0.025))
+                        .frame(height: 2)
+                        .rotationEffect(.degrees(-8))
+                }
+            }
+            .padding(.horizontal, -80)
+            .allowsHitTesting(false)
+        }
     }
 }
 
@@ -716,6 +856,12 @@ enum AppTheme {
     static let ink = Color(red: 0.16, green: 0.13, blue: 0.10)
     static let muted = Color(red: 0.46, green: 0.39, blue: 0.32)
     static let primary = Color(red: 0.70, green: 0.18, blue: 0.16)
+    static let warning = Color(red: 0.88, green: 0.52, blue: 0.10)
+    static let success = Color(red: 0.15, green: 0.50, blue: 0.35)
+    static let error = Color(red: 0.72, green: 0.18, blue: 0.18)
+    static let border = Color(red: 0.88, green: 0.78, blue: 0.61)
+    static let disabledSurface = Color(red: 0.84, green: 0.82, blue: 0.77)
+    static let disabledInk = Color(red: 0.50, green: 0.48, blue: 0.43)
 }
 
 struct AppCopy {
@@ -762,8 +908,9 @@ struct AppCopy {
     var answerPlaceholder: String { english ? "Type your answer" : "మీ జవాబు టైప్ చేయండి" }
     var submitAnswer: String { english ? "Submit answer" : "జవాబు పంపు" }
     var tryAgain: String { english ? "Not Quite" : "సరిపోలేదు" }
-    var correctAnswerMessage: String { english ? "Nice. The answer is revealed below." : "బాగుంది. జవాబు క్రింద చూపించాం." }
-    var wrongAnswerMessage: String { english ? "Good try. The answer is revealed below." : "మంచి ప్రయత్నం. జవాబు క్రింద చూపించాం." }
+    var correctAnswerMessage: String { english ? "Nice. You can reveal the answer now." : "బాగుంది. ఇప్పుడు జవాబు చూడొచ్చు." }
+    var wrongAnswerMessage: String { english ? "Good try. You can reveal the answer now." : "మంచి ప్రయత్నం. ఇప్పుడు జవాబు చూడొచ్చు." }
+    var answerRevealLocked: String { english ? "Try an answer or view a hint first." : "ముందు జవాబు ప్రయత్నించండి లేదా సూచన చూడండి." }
     var hideAnswer: String { english ? "Hide" : "దాచు" }
     var pass: String { english ? "Pass" : "పాస్" }
     var correct: String { english ? "Correct" : "సరైంది" }
@@ -776,8 +923,8 @@ struct AppCopy {
     var addFavorite: String { english ? "Add Favorite" : "ఇష్టమైనది చేయి" }
     var removeFavorite: String { english ? "Remove Favorite" : "ఇష్టమైనది తొలగించు" }
 
-    func defaultTeamName(_ number: Int) -> String {
-        english ? "Team \(number)" : "జట్టు \(number)"
+    func teamNamePlaceholder(_ number: Int) -> String {
+        english ? "Example: Team \(number)" : "ఉదా: Team \(number)"
     }
 }
 
