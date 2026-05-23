@@ -17,6 +17,18 @@ final class RiddleStore: ObservableObject {
         return riddles.filter { $0.category == category }.shuffled()
     }
 
+    func riddles(in category: String?, excludingSeen seenIDs: Set<Int>) -> [Riddle] {
+        let selected = riddles(in: category)
+        let fresh = selected.filter { !seenIDs.contains($0.id) }
+        return fresh.isEmpty ? selected : fresh
+    }
+
+    func title(for category: String, mode: LanguageMode, allTitle: String) -> String {
+        guard category != "అన్ని" else { return allTitle }
+        guard mode.usesEnglishChrome else { return category }
+        return riddles.first { $0.category == category }?.englishCategory ?? category
+    }
+
     private func load() {
         guard let url = Bundle.main.url(forResource: "riddles", withExtension: "json") else {
             riddles = []

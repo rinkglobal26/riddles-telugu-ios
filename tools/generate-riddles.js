@@ -145,3 +145,4 @@ const riddles = items.flatMap((item, itemIndex) =>
 const outPath = path.join(__dirname, "..", "TeluguRiddles", "Resources", "riddles.json");
 fs.writeFileSync(outPath, `${JSON.stringify(riddles, null, 2)}\n`, "utf8");
 console.log(`Generated ${riddles.length} Telugu riddles at ${outPath}`);
+require("./add-english-riddles");

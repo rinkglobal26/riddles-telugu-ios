@@ -13,7 +13,35 @@
 		01A000000000000000000104 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A000000000000000000004 /* ContentView.swift */; };
 		01A000000000000000000105 /* riddles.json in Resources */ = {isa = PBXBuildFile; fileRef = 01A000000000000000000005 /* riddles.json */; };
 		01A000000000000000000106 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 01A000000000000000000006 /* Assets.xcassets */; };
+		01A000000000000000000107 /* GameSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A000000000000000000008 /* GameSession.swift */; };
+		01A000000000000000000108 /* RiddleProgressStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A000000000000000000009 /* RiddleProgressStore.swift */; };
+		01A000000000000000000109 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 01A00000000000000000000A /* LaunchScreen.storyboard */; };
+		01A00000000000000000010A /* GameSessionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A00000000000000000000D /* GameSessionTests.swift */; };
+		01A00000000000000000010B /* RiddleLoadingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A00000000000000000000E /* RiddleLoadingTests.swift */; };
+		01A00000000000000000010C /* riddles.json in Resources */ = {isa = PBXBuildFile; fileRef = 01A000000000000000000005 /* riddles.json */; };
+		01A00000000000000000010D /* TeluguRiddlesUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A000000000000000000010 /* TeluguRiddlesUITests.swift */; };
+		01A00000000000000000010E /* AnswerValidator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A000000000000000000011 /* AnswerValidator.swift */; };
+		01A00000000000000000010F /* DailyRiddleNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A000000000000000000012 /* DailyRiddleNotifier.swift */; };
+		01A000000000000000000110 /* AnswerValidatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A000000000000000000013 /* AnswerValidatorTests.swift */; };
+		01A000000000000000000111 /* RiddleProgressStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01A000000000000000000014 /* RiddleProgressStoreTests.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		01A000000000000000000A01 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 01A000000000000000000601 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 01A000000000000000000401;
+			remoteInfo = TeluguRiddles;
+		};
+		01A000000000000000000A02 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 01A000000000000000000601 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 01A000000000000000000401;
+			remoteInfo = TeluguRiddles;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		01A000000000000000000001 /* TeluguRiddlesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeluguRiddlesApp.swift; sourceTree = "<group>"; };
@@ -23,10 +51,36 @@
 		01A000000000000000000005 /* riddles.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = riddles.json; sourceTree = "<group>"; };
 		01A000000000000000000006 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		01A000000000000000000007 /* TeluguRiddles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TeluguRiddles.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		01A000000000000000000008 /* GameSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSession.swift; sourceTree = "<group>"; };
+		01A000000000000000000009 /* RiddleProgressStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiddleProgressStore.swift; sourceTree = "<group>"; };
+		01A00000000000000000000A /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		01A00000000000000000000B /* TeluguRiddlesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TeluguRiddlesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		01A00000000000000000000C /* TeluguRiddlesUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TeluguRiddlesUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		01A00000000000000000000D /* GameSessionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSessionTests.swift; sourceTree = "<group>"; };
+		01A00000000000000000000E /* RiddleLoadingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiddleLoadingTests.swift; sourceTree = "<group>"; };
+		01A000000000000000000010 /* TeluguRiddlesUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeluguRiddlesUITests.swift; sourceTree = "<group>"; };
+		01A000000000000000000011 /* AnswerValidator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerValidator.swift; sourceTree = "<group>"; };
+		01A000000000000000000012 /* DailyRiddleNotifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DailyRiddleNotifier.swift; sourceTree = "<group>"; };
+		01A000000000000000000013 /* AnswerValidatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnswerValidatorTests.swift; sourceTree = "<group>"; };
+		01A000000000000000000014 /* RiddleProgressStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RiddleProgressStoreTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		01A000000000000000000201 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01A000000000000000000202 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01A000000000000000000203 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -40,6 +94,8 @@
 			isa = PBXGroup;
 			children = (
 				01A000000000000000000302 /* TeluguRiddles */,
+				01A000000000000000000309 /* TeluguRiddlesTests */,
+				01A00000000000000000030A /* TeluguRiddlesUITests */,
 				01A000000000000000000303 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -61,6 +117,8 @@
 			isa = PBXGroup;
 			children = (
 				01A000000000000000000007 /* TeluguRiddles.app */,
+				01A00000000000000000000B /* TeluguRiddlesTests.xctest */,
+				01A00000000000000000000C /* TeluguRiddlesUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -77,6 +135,8 @@
 			isa = PBXGroup;
 			children = (
 				01A000000000000000000002 /* Riddle.swift */,
+				01A000000000000000000008 /* GameSession.swift */,
+				01A000000000000000000011 /* AnswerValidator.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -85,6 +145,8 @@
 			isa = PBXGroup;
 			children = (
 				01A000000000000000000003 /* RiddleStore.swift */,
+				01A000000000000000000009 /* RiddleProgressStore.swift */,
+				01A000000000000000000012 /* DailyRiddleNotifier.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -101,8 +163,28 @@
 			isa = PBXGroup;
 			children = (
 				01A000000000000000000005 /* riddles.json */,
+				01A00000000000000000000A /* LaunchScreen.storyboard */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		01A000000000000000000309 /* TeluguRiddlesTests */ = {
+			isa = PBXGroup;
+			children = (
+				01A00000000000000000000D /* GameSessionTests.swift */,
+				01A00000000000000000000E /* RiddleLoadingTests.swift */,
+				01A000000000000000000013 /* AnswerValidatorTests.swift */,
+				01A000000000000000000014 /* RiddleProgressStoreTests.swift */,
+			);
+			path = TeluguRiddlesTests;
+			sourceTree = "<group>";
+		};
+		01A00000000000000000030A /* TeluguRiddlesUITests */ = {
+			isa = PBXGroup;
+			children = (
+				01A000000000000000000010 /* TeluguRiddlesUITests.swift */,
+			);
+			path = TeluguRiddlesUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -125,6 +207,42 @@
 			productReference = 01A000000000000000000007 /* TeluguRiddles.app */;
 			productType = "com.apple.product-type.application";
 		};
+		01A000000000000000000402 /* TeluguRiddlesTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 01A000000000000000000902 /* Build configuration list for PBXNativeTarget "TeluguRiddlesTests" */;
+			buildPhases = (
+				01A000000000000000000503 /* Sources */,
+				01A000000000000000000202 /* Frameworks */,
+				01A000000000000000000504 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				01A000000000000000000B01 /* PBXTargetDependency */,
+			);
+			name = TeluguRiddlesTests;
+			productName = TeluguRiddlesTests;
+			productReference = 01A00000000000000000000B /* TeluguRiddlesTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		01A000000000000000000403 /* TeluguRiddlesUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 01A000000000000000000903 /* Build configuration list for PBXNativeTarget "TeluguRiddlesUITests" */;
+			buildPhases = (
+				01A000000000000000000505 /* Sources */,
+				01A000000000000000000203 /* Frameworks */,
+				01A000000000000000000506 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				01A000000000000000000B02 /* PBXTargetDependency */,
+			);
+			name = TeluguRiddlesUITests;
+			productName = TeluguRiddlesUITests;
+			productReference = 01A00000000000000000000C /* TeluguRiddlesUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -137,6 +255,14 @@
 				TargetAttributes = {
 					01A000000000000000000401 = {
 						CreatedOnToolsVersion = 15.3;
+					};
+					01A000000000000000000402 = {
+						CreatedOnToolsVersion = 15.3;
+						TestTargetID = 01A000000000000000000401;
+					};
+					01A000000000000000000403 = {
+						CreatedOnToolsVersion = 15.3;
+						TestTargetID = 01A000000000000000000401;
 					};
 				};
 			};
@@ -154,6 +280,8 @@
 			projectRoot = "";
 			targets = (
 				01A000000000000000000401 /* TeluguRiddles */,
+				01A000000000000000000402 /* TeluguRiddlesTests */,
+				01A000000000000000000403 /* TeluguRiddlesUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -165,6 +293,22 @@
 			files = (
 				01A000000000000000000106 /* Assets.xcassets in Resources */,
 				01A000000000000000000105 /* riddles.json in Resources */,
+				01A000000000000000000109 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01A000000000000000000504 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01A00000000000000000010C /* riddles.json in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01A000000000000000000506 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,12 +321,48 @@
 			files = (
 				01A000000000000000000101 /* TeluguRiddlesApp.swift in Sources */,
 				01A000000000000000000102 /* Riddle.swift in Sources */,
+				01A000000000000000000107 /* GameSession.swift in Sources */,
+				01A00000000000000000010E /* AnswerValidator.swift in Sources */,
 				01A000000000000000000103 /* RiddleStore.swift in Sources */,
+				01A000000000000000000108 /* RiddleProgressStore.swift in Sources */,
+				01A00000000000000000010F /* DailyRiddleNotifier.swift in Sources */,
 				01A000000000000000000104 /* ContentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		01A000000000000000000503 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01A00000000000000000010A /* GameSessionTests.swift in Sources */,
+				01A00000000000000000010B /* RiddleLoadingTests.swift in Sources */,
+				01A000000000000000000110 /* AnswerValidatorTests.swift in Sources */,
+				01A000000000000000000111 /* RiddleProgressStoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		01A000000000000000000505 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				01A00000000000000000010D /* TeluguRiddlesUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		01A000000000000000000B01 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 01A000000000000000000401 /* TeluguRiddles */;
+			targetProxy = 01A000000000000000000A01 /* PBXContainerItemProxy */;
+		};
+		01A000000000000000000B02 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 01A000000000000000000401 /* TeluguRiddles */;
+			targetProxy = 01A000000000000000000A02 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		01A000000000000000000701 /* Debug */ = {
@@ -304,6 +484,7 @@
 		01A000000000000000000801 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -315,7 +496,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -331,6 +512,7 @@
 		01A000000000000000000802 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -342,7 +524,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
-				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
@@ -352,6 +534,100 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		01A000000000000000000803 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rink.teluguriddles.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TeluguRiddles.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TeluguRiddles";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		01A000000000000000000804 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rink.teluguriddles.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/TeluguRiddles.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/TeluguRiddles";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+		01A000000000000000000805 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rink.teluguriddles.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TeluguRiddles;
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		01A000000000000000000806 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rink.teluguriddles.uitests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = TeluguRiddles;
+				WRAPPER_EXTENSION = xctest;
 			};
 			name = Release;
 		};
@@ -372,6 +648,24 @@
 			buildConfigurations = (
 				01A000000000000000000801 /* Debug */,
 				01A000000000000000000802 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		01A000000000000000000902 /* Build configuration list for PBXNativeTarget "TeluguRiddlesTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01A000000000000000000803 /* Debug */,
+				01A000000000000000000804 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		01A000000000000000000903 /* Build configuration list for PBXNativeTarget "TeluguRiddlesUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				01A000000000000000000805 /* Debug */,
+				01A000000000000000000806 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
