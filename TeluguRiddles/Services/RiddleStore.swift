@@ -9,16 +9,28 @@ final class RiddleStore: ObservableObject {
         load()
     }
 
-    func riddles(in category: String?) -> [Riddle] {
-        guard let category, category != "అన్ని" else {
-            return riddles.shuffled()
+    func riddles(in category: String?, level: RiddleLevel = .shuffle) -> [Riddle] {
+        let categoryFiltered: [Riddle]
+
+        if let category, category != "అన్ని" {
+            categoryFiltered = riddles.filter { $0.category == category }
+        } else {
+            categoryFiltered = riddles
         }
 
-        return riddles.filter { $0.category == category }.shuffled()
+        guard level != .shuffle else {
+            return categoryFiltered.shuffled()
+        }
+
+        let difficultyValues = level.difficultyValues
+        let levelFiltered = categoryFiltered
+            .filter { difficultyValues.contains($0.difficulty) || difficultyValues.contains($0.englishDifficulty) }
+
+        return levelFiltered.isEmpty ? categoryFiltered.shuffled() : levelFiltered.shuffled()
     }
 
-    func riddles(in category: String?, excludingSeen seenIDs: Set<Int>) -> [Riddle] {
-        let selected = riddles(in: category)
+    func riddles(in category: String?, level: RiddleLevel = .shuffle, excludingSeen seenIDs: Set<Int>) -> [Riddle] {
+        let selected = riddles(in: category, level: level)
         let fresh = selected.filter { !seenIDs.contains($0.id) }
         return fresh.isEmpty ? selected : fresh
     }

@@ -14558,5 +14558,70 @@
     "englishQuestion": "Imagine this: They take you up or down one step at a time. Tell me my name.",
     "englishAnswer": "Stairs",
     "englishHint": "They take you up or down one step at a time."
+  },
+  {
+    "id": 1121,
+    "category": "సమయం",
+    "difficulty": "చురుకు",
+    "question": "నన్ను దాచితే నేను తగ్గుతాను. నన్ను వాడితే నీకు విలువ పెరుగుతుంది. అమ్మలేరు, కొనలేరు, పోయాక తెచ్చుకోలేరు. నేనేమిటి?",
+    "answer": "సమయం",
+    "hint": "గడియారం చూపుతుంది, కానీ అది కాదు",
+    "englishCategory": "Time",
+    "englishDifficulty": "Hard",
+    "englishQuestion": "Hide me and I shrink. Use me well and your value grows. You cannot buy me back once I am gone. What am I?",
+    "englishAnswer": "Time",
+    "englishHint": "A clock shows it, but is not it."
+  },
+  {
+    "id": 1122,
+    "category": "పాఠశాల",
+    "difficulty": "చురుకు",
+    "question": "నన్ను పంచుకుంటే నేను తగ్గను. దాచుకుంటే పనికిరాను. తప్పుగా పంచితే గందరగోళం పెరుగుతుంది. నేనెవరు?",
+    "answer": "జ్ఞానం",
+    "hint": "చదివితే పెరుగుతుంది",
+    "englishCategory": "School",
+    "englishDifficulty": "Hard",
+    "englishQuestion": "Share me and I do not shrink. Hide me and I am useless. Share me wrongly and confusion grows. What am I?",
+    "englishAnswer": "Knowledge",
+    "englishHint": "It grows when you learn."
+  },
+  {
+    "id": 1123,
+    "category": "ఇల్లు",
+    "difficulty": "చురుకు",
+    "question": "నన్ను విరిచినా శబ్దం రాదు. కానీ నేను విరిగిన వెంటనే అందరూ మాట్లాడటం మొదలుపెడతారు. నేనేమిటి?",
+    "answer": "నిశ్శబ్దం",
+    "hint": "మాట మొదలయ్యే ముందు ఉండేది",
+    "englishCategory": "Home",
+    "englishDifficulty": "Hard",
+    "englishQuestion": "Break me and there is no sound, but the moment I break, everyone starts talking. What am I?",
+    "englishAnswer": "Silence",
+    "englishHint": "It exists before speech begins."
+  },
+  {
+    "id": 1124,
+    "category": "ప్రకృతి",
+    "difficulty": "చురుకు",
+    "question": "నేను పుట్టిన చోట ఉండను. నన్ను పట్టుకోలేరు, కానీ నేను వచ్చిన దిశను చూసి గాలి కథ చెబుతారు. నేనేమిటి?",
+    "answer": "వాసన",
+    "hint": "పువ్వు దగ్గర మొదలై దూరం వెళ్తుంది",
+    "englishCategory": "Nature",
+    "englishDifficulty": "Hard",
+    "englishQuestion": "I do not stay where I am born. You cannot hold me, but my direction tells the story of the wind. What am I?",
+    "englishAnswer": "Smell",
+    "englishHint": "It can begin near a flower and travel away."
+  },
+  {
+    "id": 1125,
+    "category": "ఆధునికం",
+    "difficulty": "చురుకు",
+    "question": "నా ముఖం నల్లగా ఉంటే నువ్వు నీ ముఖం చూస్తావు. నేను మేల్కొంటే ప్రపంచం చూస్తావు. నేను నిద్రపోతే నువ్వే కనిపిస్తావు. నేనేమిటి?",
+    "answer": "ఫోన్ తెర",
+    "hint": "చేతిలో ఉండే కిటికీ",
+    "englishCategory": "Modern",
+    "englishDifficulty": "Hard",
+    "englishQuestion": "When my face is dark, you see your face. When I wake, you see the world. When I sleep, you appear again. What am I?",
+    "englishAnswer": "Phone screen",
+    "englishHint": "A window you hold in your hand."
   }
 ]

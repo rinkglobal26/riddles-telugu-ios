@@ -1,5 +1,9 @@
 import SwiftUI
 
+#if canImport(GoogleMobileAds)
+import GoogleMobileAds
+#endif
+
 struct ContentView: View {
     @EnvironmentObject private var store: RiddleStore
     @EnvironmentObject private var progressStore: RiddleProgressStore
@@ -8,6 +12,7 @@ struct ContentView: View {
     @State private var languageMode: LanguageMode = .hybrid
     @State private var playMode: PlayMode = .solo
     @State private var selectedCategory = "అన్ని"
+    @State private var selectedLevel: RiddleLevel = .shuffle
     @State private var gameLength: GameLength = .twenty
     @State private var skipSeenRiddles = true
     @State private var teams: [GameTeam] = [
@@ -37,13 +42,16 @@ struct ContentView: View {
                     }
                     .frame(maxWidth: .infinity, alignment: .topLeading)
                     .padding(20)
-                    .padding(.bottom, 96)
+                    .padding(.bottom, AdConfiguration.homeBottomContentPadding)
                 }
                 .scrollIndicators(.visible)
                 .scrollDismissesKeyboard(.interactively)
             }
             .safeAreaInset(edge: .bottom) {
-                startButton
+                VStack(spacing: 8) {
+                    startButton
+                    AdBannerSlot(placement: .home)
+                }
                     .padding(.horizontal, 20)
                     .padding(.top, 12)
                     .padding(.bottom, 10)
@@ -69,8 +77,8 @@ struct ContentView: View {
 
     private var gameDeck: [Riddle] {
         skipSeenRiddles
-            ? store.riddles(in: selectedCategory, excludingSeen: progressStore.seenIDs)
-            : store.riddles(in: selectedCategory)
+            ? store.riddles(in: selectedCategory, level: selectedLevel, excludingSeen: progressStore.seenIDs)
+            : store.riddles(in: selectedCategory, level: selectedLevel)
     }
 
     private var preparedTeams: [GameTeam] {
@@ -101,7 +109,12 @@ struct ContentView: View {
         HStack(spacing: 12) {
             StatTile(value: "\(store.riddles.count)", label: copy.riddles)
             StatTile(value: "\(max(store.categories.count - 1, 0))", label: copy.categories)
-            StatTile(value: "\(progressStore.favoriteIDs.count)", label: copy.favorites)
+            NavigationLink {
+                FavoritesView(languageMode: languageMode)
+            } label: {
+                StatTile(value: "\(progressStore.favoriteIDs.count)", label: copy.favorites, systemImage: "heart.fill")
+            }
+            .buttonStyle(.plain)
         }
     }
 
@@ -134,6 +147,8 @@ struct ContentView: View {
                     .padding(.top, 2)
             }
 
+            levelSelector
+
             Picker(copy.category, selection: $selectedCategory) {
                 ForEach(store.categories, id: \.self) { category in
                     Text(store.title(for: category, mode: languageMode, allTitle: copy.allCategories))
@@ -153,6 +168,59 @@ struct ContentView: View {
             }
             .pickerStyle(.segmented)
         }
+    }
+
+    private var levelSelector: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            Text(copy.level)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(AppTheme.muted)
+
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                ForEach(RiddleLevel.allCases) { level in
+                    Button {
+                        selectedLevel = level
+                    } label: {
+                        HStack(spacing: 9) {
+                            Image(systemName: level.systemImage)
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundStyle(selectedLevel == level ? .white : AppTheme.levelColor(for: level))
+                                .frame(width: 26, height: 26)
+                                .background(selectedLevel == level ? .white.opacity(0.18) : AppTheme.levelColor(for: level).opacity(0.12))
+                                .clipShape(Circle())
+
+                            Text(level.title(for: languageMode))
+                                .font(.subheadline.weight(.bold))
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.8)
+
+                            Spacer(minLength: 0)
+                        }
+                        .foregroundStyle(selectedLevel == level ? .white : AppTheme.ink)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 11)
+                        .frame(maxWidth: .infinity)
+                        .background(selectedLevel == level ? AppTheme.levelColor(for: level) : AppTheme.surface.opacity(0.88))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(selectedLevel == level ? .white.opacity(0.34) : AppTheme.border, lineWidth: 1)
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 8))
+                        .shadow(color: selectedLevel == level ? AppTheme.levelColor(for: level).opacity(0.18) : .black.opacity(0.04), radius: 8, x: 0, y: 4)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+        .padding(12)
+        .background(
+            RoundedRectangle(cornerRadius: 8)
+                .fill(.white.opacity(0.58))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(.white.opacity(0.70), lineWidth: 1)
+        )
     }
 
     private var progressOptions: some View {
@@ -666,6 +734,9 @@ struct ResultsView: View {
                 }
                 .buttonStyle(PrimaryButtonStyle())
                 .padding(.top, 8)
+
+                AdBannerSlot(placement: .results)
+                    .padding(.top, 2)
             }
             .padding(20)
         }
@@ -688,18 +759,240 @@ struct EmptyDeckView: View {
     }
 }
 
+struct FavoritesView: View {
+    let languageMode: LanguageMode
+
+    @EnvironmentObject private var store: RiddleStore
+    @EnvironmentObject private var progressStore: RiddleProgressStore
+
+    private var copy: AppCopy {
+        AppCopy(mode: languageMode)
+    }
+
+    private var favoriteRiddles: [Riddle] {
+        store.riddles.filter { progressStore.favoriteIDs.contains($0.id) }
+    }
+
+    var body: some View {
+        ZStack {
+            AppBackground()
+
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    Text(copy.favoriteReview)
+                        .font(.system(size: 34, weight: .bold, design: .rounded))
+                        .foregroundStyle(AppTheme.ink)
+
+                    if favoriteRiddles.isEmpty {
+                        InfoStrip(title: copy.noFavorites, text: copy.noFavoritesMessage, systemImage: "heart", tone: AppTheme.primary)
+                    } else {
+                        ForEach(favoriteRiddles) { riddle in
+                            FavoriteRiddleCard(riddle: riddle, languageMode: languageMode, copy: copy)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(20)
+                .padding(.bottom, 24)
+            }
+            .scrollIndicators(.visible)
+        }
+        .navigationTitle(copy.favorites)
+        .navigationBarTitleDisplayMode(.inline)
+    }
+}
+
+struct FavoriteRiddleCard: View {
+    let riddle: Riddle
+    let languageMode: LanguageMode
+    let copy: AppCopy
+
+    @EnvironmentObject private var progressStore: RiddleProgressStore
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(spacing: 10) {
+                Text(riddle.category(for: languageMode))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AppTheme.primary)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 5)
+                    .background(AppTheme.primary.opacity(0.12))
+                    .clipShape(Capsule())
+
+                Text(riddle.difficulty(for: languageMode))
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AppTheme.muted)
+
+                Spacer()
+
+                Button {
+                    progressStore.toggleFavorite(riddle)
+                } label: {
+                    Image(systemName: "heart.fill")
+                        .font(.headline)
+                        .foregroundStyle(AppTheme.primary)
+                        .accessibilityLabel(copy.removeFavorite)
+                }
+                .buttonStyle(.plain)
+            }
+
+            Text(riddle.question(for: languageMode))
+                .font(.headline.weight(.bold))
+                .foregroundStyle(AppTheme.ink)
+                .lineSpacing(4)
+
+            HStack(alignment: .top, spacing: 10) {
+                Label(copy.hint, systemImage: "lightbulb.fill")
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(AppTheme.warning)
+                    .frame(width: 74, alignment: .leading)
+
+                Text(riddle.hint(for: languageMode))
+                    .font(.subheadline)
+                    .foregroundStyle(AppTheme.muted)
+            }
+
+            HStack(alignment: .top, spacing: 10) {
+                Label(copy.answer, systemImage: "checkmark.seal.fill")
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(AppTheme.success)
+                    .frame(width: 74, alignment: .leading)
+
+                Text(riddle.answer(for: languageMode))
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(AppTheme.ink)
+            }
+        }
+        .padding(16)
+        .background(AppTheme.surface.opacity(0.96))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(AppTheme.border.opacity(0.85), lineWidth: 1)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .shadow(color: .black.opacity(0.05), radius: 10, x: 0, y: 5)
+    }
+}
+
+private enum AdPlacement {
+    case home
+    case results
+
+    var accessibilityLabel: String {
+        switch self {
+        case .home:
+            return "Home banner advertisement"
+        case .results:
+            return "Results banner advertisement"
+        }
+    }
+}
+
+private enum AdConfiguration {
+    static let testBannerAdUnitID = "ca-app-pub-3940256099942544/2435281174"
+    static let bannerAdUnitID = testBannerAdUnitID
+    static let reservedBannerHeight: CGFloat = 58
+    static let homeBottomContentPadding: CGFloat = 168
+}
+
+private struct AdBannerSlot: View {
+    let placement: AdPlacement
+
+    var body: some View {
+        GeometryReader { proxy in
+            bannerContent(width: max(proxy.size.width, 320))
+                .frame(maxWidth: .infinity, alignment: .center)
+        }
+        .frame(height: AdConfiguration.reservedBannerHeight)
+        .accessibilityLabel(placement.accessibilityLabel)
+    }
+
+    @ViewBuilder
+    private func bannerContent(width: CGFloat) -> some View {
+        #if canImport(GoogleMobileAds)
+        let adSize = largeAnchoredAdaptiveBanner(width: width)
+        AdaptiveBannerView(adUnitID: AdConfiguration.bannerAdUnitID, adSize: adSize)
+            .frame(width: adSize.size.width, height: adSize.size.height)
+        #else
+        #if DEBUG
+        developmentPlaceholder
+        #endif
+        #endif
+    }
+
+    private var developmentPlaceholder: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "rectangle.inset.filled")
+                .font(.caption.weight(.bold))
+            Text("Ad preview")
+                .font(.caption.weight(.semibold))
+        }
+        .foregroundStyle(AppTheme.muted)
+        .frame(maxWidth: .infinity, minHeight: AdConfiguration.reservedBannerHeight)
+        .background(AppTheme.surface.opacity(0.72))
+        .overlay(
+            RoundedRectangle(cornerRadius: 8)
+                .stroke(AppTheme.border.opacity(0.7), style: StrokeStyle(lineWidth: 1, dash: [5, 4]))
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+    }
+}
+
+#if canImport(GoogleMobileAds)
+private struct AdaptiveBannerView: UIViewRepresentable {
+    let adUnitID: String
+    let adSize: AdSize
+
+    func makeUIView(context: Context) -> BannerView {
+        let banner = BannerView(adSize: adSize)
+        banner.adUnitID = adUnitID
+        banner.delegate = context.coordinator
+        banner.load(Request())
+        return banner
+    }
+
+    func updateUIView(_ banner: BannerView, context: Context) {
+        banner.adSize = adSize
+    }
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
+    final class Coordinator: NSObject, BannerViewDelegate {
+        func bannerView(_ bannerView: BannerView, didFailToReceiveAdWithError error: Error) {
+            #if DEBUG
+            print("Banner ad failed to load: \(error.localizedDescription)")
+            #endif
+        }
+    }
+}
+#endif
+
 struct StatTile: View {
     let value: String
     let label: String
+    var systemImage: String?
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(value)
-                .font(.title.bold())
-                .foregroundStyle(AppTheme.ink)
-            Text(label)
-                .font(.caption.weight(.semibold))
-                .foregroundStyle(AppTheme.muted)
+        HStack(alignment: .top, spacing: 8) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(value)
+                    .font(.title.bold())
+                    .foregroundStyle(AppTheme.ink)
+                Text(label)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(AppTheme.muted)
+            }
+
+            Spacer(minLength: 0)
+
+            if let systemImage {
+                Image(systemName: systemImage)
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(AppTheme.primary)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(14)
@@ -862,6 +1155,19 @@ enum AppTheme {
     static let border = Color(red: 0.88, green: 0.78, blue: 0.61)
     static let disabledSurface = Color(red: 0.84, green: 0.82, blue: 0.77)
     static let disabledInk = Color(red: 0.50, green: 0.48, blue: 0.43)
+
+    static func levelColor(for level: RiddleLevel) -> Color {
+        switch level {
+        case .shuffle:
+            return primary
+        case .easy:
+            return Color(red: 0.20, green: 0.55, blue: 0.35)
+        case .medium:
+            return Color(red: 0.82, green: 0.46, blue: 0.10)
+        case .hard:
+            return Color(red: 0.54, green: 0.20, blue: 0.62)
+        }
+    }
 }
 
 struct AppCopy {
@@ -876,9 +1182,13 @@ struct AppCopy {
     var riddles: String { english ? "Riddles" : "పొడుపులు" }
     var categories: String { english ? "Categories" : "వర్గాలు" }
     var favorites: String { english ? "Favorites" : "ఇష్టమైనవి" }
+    var favoriteReview: String { english ? "Favorites Review" : "ఇష్టమైన పొడుపులు" }
+    var noFavorites: String { english ? "No favorites yet" : "ఇంకా ఇష్టమైనవి లేవు" }
+    var noFavoritesMessage: String { english ? "Tap the heart on any riddle during a game to save it here for later review." : "ఆటలో ఏ పొడుపుపైనా గుండె గుర్తును నొక్కితే, తర్వాత చూడటానికి ఇక్కడ సేవ్ అవుతుంది." }
     var language: String { english ? "Language" : "భాష" }
     var gameOptions: String { english ? "Game Options" : "ఆట ఎంపికలు" }
     var playMode: String { english ? "Play Mode" : "ఆట విధానం" }
+    var level: String { english ? "Level" : "స్థాయి" }
     var category: String { english ? "Category" : "వర్గం" }
     var allCategories: String { english ? "All" : "అన్ని" }
     var rounds: String { english ? "Rounds" : "రౌండ్లు" }

@@ -95,3 +95,43 @@ enum PlayMode: String, CaseIterable, Identifiable {
         }
     }
 }
+
+enum RiddleLevel: String, CaseIterable, Identifiable {
+    case shuffle
+    case easy
+    case medium
+    case hard
+
+    var id: String { rawValue }
+
+    func title(for mode: LanguageMode) -> String {
+        switch self {
+        case .shuffle: return mode.usesEnglishChrome ? "Shuffle" : "కలిపి"
+        case .easy: return mode.usesEnglishChrome ? "Easy" : "సులువు"
+        case .medium: return mode.usesEnglishChrome ? "Medium" : "మధ్యస్థం"
+        case .hard: return mode.usesEnglishChrome ? "Hard" : "కష్టం"
+        }
+    }
+
+    var difficultyValues: Set<String> {
+        switch self {
+        case .shuffle:
+            return []
+        case .easy:
+            return ["సులువు", "Easy"]
+        case .medium:
+            return ["మధ్యస్థం", "Medium"]
+        case .hard:
+            return ["చురుకు", "Quick", "Hard", "కష్టం"]
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .shuffle: return "shuffle"
+        case .easy: return "leaf.fill"
+        case .medium: return "flame.fill"
+        case .hard: return "bolt.fill"
+        }
+    }
+}
